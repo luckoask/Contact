@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+</head>
+<body>
+    <div>
+        <h2>Contact Me</h2>
+        <form id="contactForm">
+            <label for="message">Text:</label><br>
+            <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            sendMessage();
+        });
+
+        function sendMessage() {
+            var message = document.getElementById("message").value;
+            var webhookURL = "https://discord.com/api/webhooks/1238220176651063437/HBWuJmJy8QpBRNKMU_tAYWqnBUCfA46ou7aiH416O-pegUSDKWZQi49WyIqZuHrQeSS3";
+
+            fetch(webhookURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    content: message
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to send message.");
+                }
+                alert("Message sent successfully!");
+                document.getElementById("message").value = "";
+            })
+            .catch(error => {
+                console.error("Error sending message:", error);
+                alert("Failed to send message. Please try again later.");
+            });
+        }
+    </script>
+</body>
+</html>
