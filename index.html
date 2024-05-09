@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Form</title>
     <style>
+        /* Light Mode CSS */
+        body.light-mode {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Dark Mode CSS */
+        body.dark-mode {
+            background-color: #333;
+            color: #f5f5f5;
+        }
+
         @keyframes rainbow-glow {
             0% {
                 box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
@@ -41,10 +53,6 @@
             }
         }
 
-        body {
-            font-family: "Comic Sans MS", cursive;
-        }
-
         button#sendButton {
             animation: rainbow-glow 2s infinite alternate; /* Apply rainbow glow animation */
             border: none;
@@ -62,9 +70,42 @@
             animation: rainbow-glow 2s infinite alternate; /* Apply rainbow glow animation */
             font-family: "Comic Sans MS", cursive; /* Apply Comic Sans font */
         }
+
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            z-index: 9999;
+        }
+
+        .cookie-banner button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+
+        .cookie-banner button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
-<body>
+<body class="light-mode">
+    <div id="cookieBanner" class="cookie-banner" style="display: none;">
+        <span>This website uses cookies to ensure you get the best experience.</span>
+        <button id="acceptButton">Accept</button>
+        <button id="declineButton">Decline</button>
+    </div>
+
     <div>
         <h2>Contact Me</h2>
         <form id="contactForm">
@@ -76,19 +117,38 @@
         </form>
     </div>
 
+    <div>
+        <label for="modeSwitch">Dark Mode:</label>
+        <input type="checkbox" id="modeSwitch">
+    </div>
+
     <script>
+        var lastSentTime = 0; // Initialize last sent time
+
         // Load saved name from local storage
         document.getElementById("name").value = localStorage.getItem("savedName");
 
         document.getElementById("contactForm").addEventListener("submit", function(event) {
             event.preventDefault();
+            var currentTime = Date.now();
+            if (currentTime - lastSentTime < 3000) {
+                alert("Please wait before sending another message.");
+                return;
+            }
             sendMessage();
+            lastSentTime = currentTime; // Update last sent time
         });
 
         document.getElementById("message").addEventListener("keydown", function(event) {
             if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
+                var currentTime = Date.now();
+                if (currentTime - lastSentTime < 3000) {
+                    alert("Please wait before sending another message.");
+                    return;
+                }
                 sendMessage();
+                lastSentTime = currentTime; // Update last sent time
             }
         });
 
@@ -127,6 +187,50 @@
                 alert("Failed to send message. Please try again later.");
             });
         }
+
+        // Cookie consent
+        var cookieBanner = document.getElementById("cookieBanner");
+        var acceptButton = document.getElementById("acceptButton");
+        var declineButton = document.getElementById("declineButton");
+
+        // Check if the user has previously accepted or declined cookies
+        var cookiesAccepted = localStorage.getItem("cookiesAccepted");
+
+        if (cookiesAccepted === "true") {
+            // Cookies accepted, hide the cookie banner
+            cookieBanner.style.display = "none";
+        } else if (cookiesAccepted === "false") {
+            // Cookies declined, remove all cookies
+            document.cookie.split(";").forEach(function(cookie) {
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            });
+        } else {
+            // Show the cookie banner if the user hasn't made a choice yet
+            cookieBanner.style.display = "block";
+        }
+
+        // Add event listeners to accept and decline buttons
+        acceptButton.addEventListener("click", function() {
+            localStorage.setItem("cookiesAccepted", "true");
+            cookieBanner.style.display = "none";
+        });
+
+        declineButton.addEventListener("click", function() {
+            localStorage.setItem("cookiesAccepted", "false");
+            cookieBanner.style.display = "none";
+        });
+
+        // Dark mode toggle
+        var modeSwitch = document.getElementById("modeSwitch");
+        modeSwitch.addEventListener("change", function() {
+            if (modeSwitch.checked) {
+                document.body.classList.add("dark-mode");
+            } else {
+                document.body.classList.remove("dark-mode");
+            }
+        });
     </script>
 </body>
 </html>
