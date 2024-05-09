@@ -97,6 +97,20 @@
         .cookie-banner button:hover {
             background-color: #45a049;
         }
+
+        /* Mode Icon */
+        .mode-icons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+
+        .mode-icons img {
+            cursor: pointer;
+            width: 40px;
+            height: auto;
+        }
     </style>
 </head>
 <body class="light-mode">
@@ -117,9 +131,9 @@
         </form>
     </div>
 
-    <div>
-        <label for="modeSwitch">Dark Mode:</label>
-        <input type="checkbox" id="modeSwitch">
+    <div class="mode-icons">
+        <img id="lightModeIcon" src="https://static-00.iconduck.com/assets.00/sun-icon-512x511-57u646dm.png" alt="Light Mode Icon">
+        <img id="darkModeIcon" src="https://static-00.iconduck.com/assets.00/moon-icon-512x512-fm9crgpt.png" alt="Dark Mode Icon">
     </div>
 
     <script>
@@ -222,15 +236,34 @@
             cookieBanner.style.display = "none";
         });
 
-        // Dark mode toggle
-        var modeSwitch = document.getElementById("modeSwitch");
-        modeSwitch.addEventListener("change", function() {
-            if (modeSwitch.checked) {
-                document.body.classList.add("dark-mode");
-            } else {
-                document.body.classList.remove("dark-mode");
-            }
+        // Mode switch
+        var lightModeIcon = document.getElementById("lightModeIcon");
+        var darkModeIcon = document.getElementById("darkModeIcon");
+
+        lightModeIcon.addEventListener("click", function() {
+            document.body.classList.remove("dark-mode");
+            localStorage.setItem("darkModeEnabled", "false");
+            lightModeIcon.style.display = "none";
+            darkModeIcon.style.display = "block";
         });
+
+        darkModeIcon.addEventListener("click", function() {
+            document.body.classList.add("dark-mode");
+            localStorage.setItem("darkModeEnabled", "true");
+            lightModeIcon.style.display = "block";
+            darkModeIcon.style.display = "none";
+        });
+
+        // Load dark mode preference from local storage
+        var darkModeEnabled = localStorage.getItem("darkModeEnabled") === "true";
+        if (darkModeEnabled) {
+            document.body.classList.add("dark-mode");
+            lightModeIcon.style.display = "block";
+            darkModeIcon.style.display = "none";
+        } else {
+            lightModeIcon.style.display = "none";
+            darkModeIcon.style.display = "block";
+        }
     </script>
 </body>
 </html>
