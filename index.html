@@ -53,7 +53,7 @@
             }
         }
 
-        button#sendButton {
+        button#sendButton, button#uploadButton {
             animation: rainbow-glow 2s infinite alternate; /* Apply rainbow glow animation */
             border: none;
             background-color: transparent;
@@ -61,7 +61,7 @@
             font-family: "Comic Sans MS", cursive; /* Apply Comic Sans font */
         }
 
-        button#sendButton:hover {
+        button#sendButton:hover, button#uploadButton:hover {
             animation: none; /* Disable rainbow animation on hover */
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Glow effect on hover */
         }
@@ -100,10 +100,9 @@
 
         /* Mode Icon */
         .mode-icons {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 999;
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
 
         .mode-icons img {
@@ -128,6 +127,7 @@
             <label for="message">Message:</label><br>
             <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
             <button id="sendButton" type="submit">Send</button>
+            <button id="uploadButton" type="button">Upload Files</button>
         </form>
     </div>
 
@@ -242,14 +242,12 @@
 
         lightModeIcon.addEventListener("click", function() {
             document.body.classList.remove("dark-mode");
-            localStorage.setItem("darkModeEnabled", "false");
             lightModeIcon.style.display = "none";
             darkModeIcon.style.display = "block";
         });
 
         darkModeIcon.addEventListener("click", function() {
             document.body.classList.add("dark-mode");
-            localStorage.setItem("darkModeEnabled", "true");
             lightModeIcon.style.display = "block";
             darkModeIcon.style.display = "none";
         });
@@ -260,9 +258,6 @@
             document.body.classList.add("dark-mode");
             lightModeIcon.style.display = "block";
             darkModeIcon.style.display = "none";
-        } else {
-            lightModeIcon.style.display = "none";
-            darkModeIcon.style.display = "block";
         }
     </script>
 </body>
