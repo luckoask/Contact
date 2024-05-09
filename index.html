@@ -9,7 +9,9 @@
     <div>
         <h2>Contact Me</h2>
         <form id="contactForm">
-            <label for="message">Text:</label><br>
+            <label for="name">Your Name:</label><br>
+            <input type="text" id="name" name="name"><br>
+            <label for="message">Message:</label><br>
             <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
             <button type="submit">Send</button>
         </form>
@@ -29,8 +31,11 @@
         });
 
         function sendMessage() {
+            var name = document.getElementById("name").value;
             var message = document.getElementById("message").value;
             var webhookURL = "https://discord.com/api/webhooks/1238220176651063437/HBWuJmJy8QpBRNKMU_tAYWqnBUCfA46ou7aiH416O-pegUSDKWZQi49WyIqZuHrQeSS3";
+
+            var fullMessage = name ? "**From:** " + name + "\n**Message:** " + message : message;
 
             fetch(webhookURL, {
                 method: "POST",
@@ -38,7 +43,7 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    content: message
+                    content: fullMessage
                 })
             })
             .then(response => {
@@ -46,6 +51,7 @@
                     throw new Error("Failed to send message.");
                 }
                 alert("Message sent successfully!");
+                document.getElementById("name").value = "";
                 document.getElementById("message").value = "";
             })
             .catch(error => {
