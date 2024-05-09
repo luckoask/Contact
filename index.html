@@ -18,6 +18,9 @@
     </div>
 
     <script>
+        // Load saved name from local storage
+        document.getElementById("name").value = localStorage.getItem("savedName");
+
         document.getElementById("contactForm").addEventListener("submit", function(event) {
             event.preventDefault();
             sendMessage();
@@ -35,6 +38,9 @@
             var message = document.getElementById("message").value;
             var webhookURL = "https://discord.com/api/webhooks/1238220176651063437/HBWuJmJy8QpBRNKMU_tAYWqnBUCfA46ou7aiH416O-pegUSDKWZQi49WyIqZuHrQeSS3";
 
+            // Save name to local storage
+            localStorage.setItem("savedName", name);
+
             var fullMessage = name ? "**From:** " + name + "\n**Message:** " + message : message;
 
             fetch(webhookURL, {
@@ -51,7 +57,6 @@
                     throw new Error("Failed to send message.");
                 }
                 alert("Message sent successfully!");
-                document.getElementById("name").value = "";
                 document.getElementById("message").value = "";
             })
             .catch(error => {
