@@ -4,6 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Form</title>
+    <style>
+        @keyframes rainbow-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            }
+            10% {
+                box-shadow: 0 0 20px rgba(255, 255, 0, 0.9);
+            }
+            20% {
+                box-shadow: 0 0 30px rgba(0, 255, 0, 1);
+            }
+            30% {
+                box-shadow: 0 0 40px rgba(0, 255, 255, 1);
+            }
+            40% {
+                box-shadow: 0 0 50px rgba(0, 0, 255, 1);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(255, 0, 255, 1);
+            }
+            60% {
+                box-shadow: 0 0 50px rgba(0, 0, 255, 1);
+            }
+            70% {
+                box-shadow: 0 0 40px rgba(0, 255, 255, 1);
+            }
+            80% {
+                box-shadow: 0 0 30px rgba(0, 255, 0, 1);
+            }
+            90% {
+                box-shadow: 0 0 20px rgba(255, 255, 0, 0.9);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            }
+        }
+
+        body {
+            font-family: "Comic Sans MS", cursive;
+        }
+
+        button#sendButton {
+            animation: rainbow-glow 2s infinite alternate; /* Apply rainbow glow animation */
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-family: "Comic Sans MS", cursive; /* Apply Comic Sans font */
+        }
+
+        button#sendButton:hover {
+            animation: none; /* Disable rainbow animation on hover */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Glow effect on hover */
+        }
+
+        #message {
+            animation: rainbow-glow 2s infinite alternate; /* Apply rainbow glow animation */
+            font-family: "Comic Sans MS", cursive; /* Apply Comic Sans font */
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -13,7 +72,7 @@
             <input type="text" id="name" name="name"><br>
             <label for="message">Message:</label><br>
             <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
-            <button type="submit">Send</button>
+            <button id="sendButton" type="submit">Send</button>
         </form>
     </div>
 
@@ -36,6 +95,10 @@
         function sendMessage() {
             var name = document.getElementById("name").value;
             var message = document.getElementById("message").value;
+            if (!message.trim()) {
+                alert("Please enter a message.");
+                return;
+            }
             var webhookURL = "https://discord.com/api/webhooks/1238220176651063437/HBWuJmJy8QpBRNKMU_tAYWqnBUCfA46ou7aiH416O-pegUSDKWZQi49WyIqZuHrQeSS3";
 
             // Save name to local storage
