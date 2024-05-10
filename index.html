@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Form</title>
     <style>
+        /* Your existing CSS styles */
         /* Light Mode CSS */
         body.light-mode {
             background-color: #f5f5f5;
@@ -71,34 +72,6 @@
             font-family: "Comic Sans MS", cursive; /* Apply Comic Sans font */
         }
 
-        .cookie-banner {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            z-index: 9999;
-        }
-
-        .cookie-banner button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 0 10px;
-        }
-
-        .cookie-banner button:hover {
-            background-color: #45a049;
-        }
-
-        /* Mode Icon */
         .mode-icons {
             position: absolute;
             top: 10px;
@@ -114,80 +87,81 @@
 </head>
 <body class="light-mode">
     <div id="cookieBanner" class="cookie-banner" style="display: none;">
-        <span>This website uses cookies to ensure you get the best experience.</span>
-        <button id="acceptButton">Accept</button>
-        <button id="declineButton">Decline</button>
     </div>
 
-    <div>
+    <div style="text-align: center;">
         <h2>Contact Me</h2>
         <form id="contactForm">
             <label for="name">Your Name:</label><br>
             <input type="text" id="name" name="name"><br>
             <label for="message">Message:</label><br>
             <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
-            <button id="sendButton" type="submit">Send</button>
+            <button id="sendButton" type="button">Send</button>
             <button id="uploadButton" type="button">Upload Files</button>
+            
+            <input type="file" id="fileInput" style="display: none;" multiple>
         </form>
     </div>
 
-    <div class="mode-icons">
+    <div class="mode-icons" style="position: absolute; top: 10px; right: 10px;">
         <img id="lightModeIcon" src="https://static-00.iconduck.com/assets.00/sun-icon-512x511-57u646dm.png" alt="Light Mode Icon">
         <img id="darkModeIcon" src="https://static-00.iconduck.com/assets.00/moon-icon-512x512-fm9crgpt.png" alt="Dark Mode Icon">
     </div>
 
     <script>
-        var lastSentTime = 0; // Initialize last sent time
-
-        // Load saved name from local storage
-        document.getElementById("name").value = localStorage.getItem("savedName");
-
-        document.getElementById("contactForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var currentTime = Date.now();
-            if (currentTime - lastSentTime < 3000) {
-                alert("Please wait before sending another message.");
-                return;
-            }
-            sendMessage();
-            lastSentTime = currentTime; // Update last sent time
+        // Your existing JavaScript code
+        
+        document.getElementById("uploadButton").addEventListener("click", function() {
+            document.getElementById("fileInput").click(); // Trigger click event of file input
         });
 
-        document.getElementById("message").addEventListener("keydown", function(event) {
-            if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                var currentTime = Date.now();
-                if (currentTime - lastSentTime < 3000) {
-                    alert("Please wait before sending another message.");
-                    return;
-                }
-                sendMessage();
-                lastSentTime = currentTime; // Update last sent time
-            }
+        // Add event listener to file input
+        document.getElementById("fileInput").addEventListener("change", function() {
+            var files = this.files; // Get the selected files
+            // Process the selected files here
+            console.log(files);
+        });
+
+        // Function to handle form submission
+        document.getElementById("sendButton").addEventListener("click", function() {
+            sendMessage();
         });
 
         function sendMessage() {
             var name = document.getElementById("name").value;
             var message = document.getElementById("message").value;
+            
+            // List of restricted names
+            var restrictedNames = ["lucius", "luckoas", "luckoask", "lucko", "lcks", "luckoasd", "luckoasq"];
+            
+            // Check if the entered name is in the list of restricted names
+            if (restrictedNames.includes(name.trim().toLowerCase())) {
+                alert("Sorry, the name '" + name + "' cannot be used.");
+                return;
+            }
+            
             if (!message.trim()) {
                 alert("Please enter a message.");
                 return;
             }
+            
             var webhookURL = "https://discord.com/api/webhooks/1238220176651063437/HBWuJmJy8QpBRNKMU_tAYWqnBUCfA46ou7aiH416O-pegUSDKWZQi49WyIqZuHrQeSS3";
-
-            // Save name to local storage
-            localStorage.setItem("savedName", name);
 
             var fullMessage = name ? "**From:** " + name + "\n**Message:** " + message : message;
 
+            // Create a FormData object
+            var formData = new FormData();
+            // Append the message to the FormData object
+            formData.append("content", fullMessage);
+            // Append each selected file to the FormData object
+            var files = document.getElementById("fileInput").files;
+            for (var i = 0; i < files.length; i++) {
+                formData.append("files[]", files[i]);
+            }
+
             fetch(webhookURL, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    content: fullMessage
-                })
+                body: formData
             })
             .then(response => {
                 if (!response.ok) {
@@ -202,40 +176,6 @@
             });
         }
 
-        // Cookie consent
-        var cookieBanner = document.getElementById("cookieBanner");
-        var acceptButton = document.getElementById("acceptButton");
-        var declineButton = document.getElementById("declineButton");
-
-        // Check if the user has previously accepted or declined cookies
-        var cookiesAccepted = localStorage.getItem("cookiesAccepted");
-
-        if (cookiesAccepted === "true") {
-            // Cookies accepted, hide the cookie banner
-            cookieBanner.style.display = "none";
-        } else if (cookiesAccepted === "false") {
-            // Cookies declined, remove all cookies
-            document.cookie.split(";").forEach(function(cookie) {
-                var eqPos = cookie.indexOf("=");
-                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            });
-        } else {
-            // Show the cookie banner if the user hasn't made a choice yet
-            cookieBanner.style.display = "block";
-        }
-
-        // Add event listeners to accept and decline buttons
-        acceptButton.addEventListener("click", function() {
-            localStorage.setItem("cookiesAccepted", "true");
-            cookieBanner.style.display = "none";
-        });
-
-        declineButton.addEventListener("click", function() {
-            localStorage.setItem("cookiesAccepted", "false");
-            cookieBanner.style.display = "none";
-        });
-
         // Mode switch
         var lightModeIcon = document.getElementById("lightModeIcon");
         var darkModeIcon = document.getElementById("darkModeIcon");
@@ -244,12 +184,14 @@
             document.body.classList.remove("dark-mode");
             lightModeIcon.style.display = "none";
             darkModeIcon.style.display = "block";
+            localStorage.setItem("darkModeEnabled", "false");
         });
 
         darkModeIcon.addEventListener("click", function() {
             document.body.classList.add("dark-mode");
             lightModeIcon.style.display = "block";
             darkModeIcon.style.display = "none";
+            localStorage.setItem("darkModeEnabled", "true");
         });
 
         // Load dark mode preference from local storage
@@ -259,6 +201,19 @@
             lightModeIcon.style.display = "block";
             darkModeIcon.style.display = "none";
         }
+
+        // Load saved name from local storage
+        var savedName = localStorage.getItem("savedName");
+        if (savedName) {
+            document.getElementById("name").value = savedName;
+        }
+
+        // Enable form submission on Enter key press
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
