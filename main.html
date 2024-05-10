@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCKS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scroll bars */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full height of the viewport */
+            background-color: black; /* Fallback color */
+        }
+        video#bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1; /* Place it behind all other elements */
+        }
+        header {
+            padding: 20px;
+            text-align: center; /* Center header text */
+            margin-bottom: -50px; /* Move the header up by 50 pixels */
+            z-index: 1; /* Ensure header is above content */
+        }
+        header h1 {
+            font-family: "Comic Sans MS", cursive; /* Change font to Comic Sans MS */
+            text-shadow: 0 0 15px white; /* Add white stroke to text */
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            z-index: 1; /* Ensure nav is above content */
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+            margin-bottom: 20px; /* Move the buttons slightly down */
+        }
+        nav ul li a {
+            color: black; /* Default text color */
+            text-decoration: none;
+            border: 1px solid black; /* Add border to buttons */
+            padding: 15px 30px; /* Increase padding for buttons */
+            border-radius: 4px; /* Rounded corners for buttons */
+            font-size: 16px; /* Increase font size for buttons */
+            font-weight: bold; /* Increase font weight */
+        }
+        nav ul li a:hover {
+            background-color: black; /* Change background color on hover */
+            color: lightblue; /* Change text color on hover */
+        }
+        section {
+            padding: 50px;
+            text-align: center; /* Center section content */
+            color: black; /* Default text color */
+            z-index: 1; /* Ensure section is above content */
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            color: white; /* Footer text color */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 1; /* Ensure footer is above content */
+        }
+        .click-overlay {
+            background-color: black;
+            color: white;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999; /* Ensure overlay is above everything */
+        }
+        .click-overlay.hidden {
+            opacity: 0;
+            pointer-events: none; /* Disable click events when hidden */
+        }
+        .glow {
+            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
+        }
+    </style>
+</head>
+<body>
+    <video id="bg-video" autoplay muted loop>
+        <source src="C:\Users\Luckoas\Downloads\ok.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <header>
+        <h1 style="font-family: 'Comic Sans MS', cursive;">Welcome to LCKS</h1>
+        <nav>
+            <ul>
+                <li><a href="https://luckoask.github.io/Contact" target="_blank">Contact Me</a></li>
+                <li><a href="https://www.youtube.com/channel/UCccl1WENi0Bhol2CmJY7msw?sub_confirmation=1" target="_blank">Youtube</a></li>
+                <li><a href="https://t.me/+Rxi9E1EH5tQ3YzNk" target="_blank">Telegram</a></li>
+                <li><a href="https://discord.gg/eePuZtZx94" target="_blank">Discord</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Click overlay -->
+    <div class="click-overlay glow" id="clickOverlay" onclick="showContent()">
+        c l i c k
+    </div>
+
+    <!-- Content -->
+    <div class="content hidden" id="content">
+        <section>
+            <h2>Hi! Im luckoas, and this is my About Me.</h2>
+            <!-- Add your content here -->
+        </section>
+
+        <!-- Other sections for About, Telegram, and Contact pages -->
+
+
+    </div>
+
+    <!-- Audio -->
+    <audio id="myAudio" controls loop autoplay style="display: none;">
+        <source src="C:\Users\Luckoas\Downloads\ok.mp4" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        function showContent() {
+            var overlay = document.getElementById("clickOverlay");
+            var content = document.getElementById("content");
+            overlay.classList.add("hidden");
+            content.classList.remove("hidden");
+
+            // Play the audio when content is shown
+            var audio = document.getElementById("myAudio");
+            audio.play();
+        }
+    </script>
+</body>
+</html>
